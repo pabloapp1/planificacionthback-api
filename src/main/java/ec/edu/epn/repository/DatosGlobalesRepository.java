@@ -10,6 +10,6 @@ public interface DatosGlobalesRepository extends JpaRepository<DatosGlobales, In
 
     //List<DatosGlobales> findByIdDatosGlobalesList(Integer idDatosGlobales);
 
-    String findByClaveDatosGlobales(String claveDatosglobales);
+    //String findByClaveDatosGlobales(String claveDatosglobales);
 
 }
