@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface DatosGlobalesService {
 
-    List<DatosGlobalesDTO> listar();
+    DatosGlobalesDTO findByClaveDatosGlobales(String claveDatosglobales);
 }

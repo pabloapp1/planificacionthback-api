@@ -14,5 +14,8 @@ public interface ProductoActividadRepository extends JpaRepository<ProductoActiv
 
     @Query("Select p from ProductoActividad p where p.idProductovolumen.idProductovolumen = ?1 order by p.idActividad")
     List<ProductoActividad> findByIdProductovolumenList(Integer idProductovolumen);
+
+    @Query("SELECT COUNT(p) FROM ProductoActividad p where p.idProductovolumen.idProductovolumen = ?1")
+    ProductoActividad findCountProductoActividad(Integer idProductovolumen);
 }
 

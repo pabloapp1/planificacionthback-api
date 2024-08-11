@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import ec.edu.epn.repository.DatosGlobalesRepository;
+import ec.edu.epn.repository.ProductoActividadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,12 @@ public class ProductoActividadRest {
     @Autowired
     ProductoActividadService service;
 
+    @Autowired
+    ProductoActividadRepository repository;
+
+    @Autowired
+    DatosGlobalesRepository repositoryDatosGlobales;
+
     @PostMapping(value = "guardarProductoActividad")
     public ResponseEntity<?> create(@RequestBody ProductoActividadDTO obj) throws Exception {
     	ProductoActividadDTO dto = service.create(obj);
@@ -46,7 +54,18 @@ public class ProductoActividadRest {
 
     @PostMapping(value = "guardarListaProductoActividad")
     public ResponseEntity<?> createList(@RequestBody List<ProductoActividadDTO> listObj) throws Exception {
-        List<ProductoActividadDTO> listDto = service.createList(listObj);
+
+
+        //int tamanoLista = repository.findCountProductoActividad(listObj.get(0).getIdProductovolumen().getIdProductovolumen());
+        int tamanoLista2 = repository.findByIdProductovolumenList(listObj.get(0).getIdProductovolumen().getIdProductovolumen()).size();
+
+        int minNumActividades = Integer.parseInt(repositoryDatosGlobales.findByClaveDatosGlobales("minNumActividades").getValorDatosglobales());
+
+        if (tamanoLista2 >= minNumActividades) {
+            List<ProductoActividadDTO> listDto = service.createList(listObj);
+
+        //listDto.get(0).getIdProductovolumen();
+
         ResponseGenerico<ProductoActividadDTO> response = new ResponseGenerico<>();
         try {
             response.setCodigoRespuestaName(HttpStatus.OK.name());
@@ -58,6 +77,13 @@ public class ProductoActividadRest {
             response.setCodigoRespuestaName(HttpStatus.BAD_REQUEST.name());
             response.setCodigoRespuestaValue(HttpStatus.BAD_REQUEST.value());
             response.setMensaje(EnumMessages.INGRESO_FALLIDO.name() + ":" + e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        }else {
+            ResponseGenerico<ProductoActividadDTO> response = new ResponseGenerico<>();
+            response.setCodigoRespuestaName(HttpStatus.BAD_REQUEST.name());
+            response.setCodigoRespuestaValue(HttpStatus.BAD_REQUEST.value());
+            response.setMensaje(EnumMessages.INGRESO_FALLIDO.name() + ":" + "Se debe Ingresar Minimo 3 Actividades" );
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
