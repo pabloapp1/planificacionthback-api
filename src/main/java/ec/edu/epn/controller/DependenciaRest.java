@@ -21,7 +21,7 @@ public class DependenciaRest {
     @Autowired
     DependenciaService service;
 
-    @GetMapping(value = "buscarDependenciaPorIdDepPadreList")
+    @GetMapping(value = "buscarDependenciaPorIdDepPadreList/{idDepPadre}")
     public ResponseEntity<?> findByIdDepPadre(@PathVariable String idDepPadre) {
         ResponseGenerico<DependenciaDTO> response = new ResponseGenerico<>();
         try {
